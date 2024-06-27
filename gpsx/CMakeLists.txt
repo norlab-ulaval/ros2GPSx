@@ -23,23 +23,47 @@ find_package(sensor_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Gpsx.msg"
+  "msg/Xyz.msg"
   "srv/GetSatList.srv"
 )
 
 add_executable(gps_node src/gps_node.cpp)
 ament_target_dependencies(gps_node rclcpp std_msgs sensor_msgs)
-rosidl_target_interfaces(gps_node ${PROJECT_NAME} "rosidl_typesupport_cpp")
+
+add_executable(gps_reader src/gps_reader.cpp)
+ament_target_dependencies(gps_reader rclcpp std_msgs sensor_msgs)
+
+rosidl_get_typesupport_target(cpp_typesupport_target
+  ${PROJECT_NAME} rosidl_typesupport_cpp)
+
+target_link_libraries(gps_node "${cpp_typesupport_target}")
 
 target_include_directories(gps_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-install(TARGETS gps_node
+install(TARGETS 
+  gps_node
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME}
   INCLUDES
   DESTINATION include)
 
+target_link_libraries(gps_reader "${cpp_typesupport_target}")
+
+target_include_directories(gps_reader PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+
+install(TARGETS 
+  gps_reader
+  EXPORT export_${PROJECT_NAME}
+  DESTINATION lib/${PROJECT_NAME}
+  INCLUDES
+  DESTINATION include)
+  
+install(DIRECTORY launch
+    DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
