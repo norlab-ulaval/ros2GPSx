@@ -8,10 +8,6 @@
 #include <chrono>
 #include <iostream>
 //below lib for coord conversion
-#include <GeographicLib/Geocentric.hpp>
-#include <GeographicLib/LocalCartesian.hpp>
-#include <proj.h>
-#include <stdio.h>
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
