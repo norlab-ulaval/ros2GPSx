@@ -20,6 +20,11 @@ find_package(rosidl_default_generators REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 find_package(sensor_msgs REQUIRED)
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};/usr/share/cmake/geographiclib")
+find_package (GeographicLib REQUIRED)
+include_directories (${GeographicLib_INCLUDE_DIRS})
+find_package(PROJ REQUIRED CONFIG)
+
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Gpsx.msg"
@@ -50,6 +55,8 @@ install(TARGETS
   DESTINATION include)
 
 target_link_libraries(gps_reader "${cpp_typesupport_target}")
+target_link_libraries (gps_reader ${GeographicLib_LIBRARIES}) 
+target_link_libraries(gps_reader PROJ::proj)
 
 target_include_directories(gps_reader PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

@@ -2,9 +2,16 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "std_msgs/msg/float32_multi_array.hpp"
 #include "gpsx/msg/gpsx.hpp"
 #include "gpsx/msg/xyz.hpp"
 #include <chrono>
+#include <iostream>
+//below lib for coord conversion
+#include <GeographicLib/Geocentric.hpp>
+#include <GeographicLib/LocalCartesian.hpp>
+#include <proj.h>
+#include <stdio.h>
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -20,12 +27,12 @@ class Gps_reader : public rclcpp::Node
       "topic_emlid_E845", 10, std::bind(&Gps_reader::topic_E845_callback, this, _1));
 
       subscription_2 = this->create_subscription<gpsx::msg::Gpsx>(
-      "topic_emlid_backpack", 10, std::bind(&Gps_reader::topic_backpack_callback, this, _1));
+      "topic_emlid_C959", 10, std::bind(&Gps_reader::topic_C959_callback, this, _1));
 
       subscription_3 = this->create_subscription<gpsx::msg::Gpsx>(
       "topic_emlid_6802", 10, std::bind(&Gps_reader::topic_6802_callback, this, _1));
 
-      publisher_ = this->create_publisher<gpsx::msg::Xyz>("pos_conversion", 10);
+      publisher_ = this->create_publisher<std_msgs::msg::Float32MultiArray>("gps_value", 10);
 
      timer_ = this->create_wall_timer(
        50ms, std::bind(&Gps_reader::timer_callback, this));
@@ -37,9 +44,9 @@ class Gps_reader : public rclcpp::Node
       emlid_E845_msg = msg;
     }
 
-    void topic_backpack_callback(const gpsx::msg::Gpsx & msg)
+    void topic_C959_callback(const gpsx::msg::Gpsx & msg)
     {
-      emlid_backpack_msg = msg;
+      emlid_C959_msg = msg;
     }
 
     void topic_6802_callback(const gpsx::msg::Gpsx & msg)
@@ -49,13 +56,18 @@ class Gps_reader : public rclcpp::Node
 
     void timer_callback()
     {
-      auto message = gpsx::msg::Xyz();
-      message.x = 1.4;
-      message.y = 1.4;
-      message.z = 1.4;
-      RCLCPP_INFO(this->get_logger(), " valeur_sat_E845: '%i'", emlid_E845_msg.satellites);
-      RCLCPP_INFO(this->get_logger(), "valeur_sat_6802: '%i'", emlid_6802_msg.satellites);
-      RCLCPP_INFO(this->get_logger(), "valeur_sat_backpack: '%i'", emlid_backpack_msg.satellites);
+     
+      auto message = std_msgs::msg::Float32MultiArray();
+
+      message.layout.dim.push_back(std_msgs::msg::MultiArrayDimension());
+      message.layout.dim[0].label = "emlid_values";
+      message.layout.dim[0].size = 9;  
+      message.layout.dim[0].stride = 9;
+      //pas propre mais marche 
+      message.data = {static_cast<float> (emlid_E845_msg.longitude), static_cast<float> (emlid_E845_msg.latitude),static_cast<float> (emlid_E845_msg.altitude),
+                      static_cast<float> (emlid_C959_msg.longitude), static_cast<float> (emlid_C959_msg.latitude),static_cast<float> (emlid_C959_msg.altitude), 
+                      static_cast<float> (emlid_6802_msg.longitude), static_cast<float> (emlid_6802_msg.latitude),static_cast<float> (emlid_6802_msg.altitude)};
+
       publisher_->publish(message);
     }
 
@@ -65,8 +77,8 @@ class Gps_reader : public rclcpp::Node
     rclcpp::TimerBase::SharedPtr timer_;
     gpsx::msg::Gpsx emlid_E845_msg;
     gpsx::msg::Gpsx emlid_6802_msg;
-    gpsx::msg::Gpsx emlid_backpack_msg;
-    rclcpp::Publisher<gpsx::msg::Xyz>::SharedPtr publisher_;
+    gpsx::msg::Gpsx emlid_C959_msg;
+    rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr publisher_;
 };
 
 int main(int argc, char * argv[])

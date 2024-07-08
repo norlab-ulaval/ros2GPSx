@@ -9,27 +9,32 @@ def generate_launch_description():
             package='gpsx',
             executable='gps_node',
             name='emlid_E845', 
-            parameters=[{'comm_port': "/dev/ttyACM0"}, {'comm_speed': 9600}],
+            parameters=[{'comm_port': "/dev/emlidE845"}, {'comm_speed': 9600}],
             remappings= [('/gpsx', 'topic_emlid_E845')]
         ),
         Node(
             package='gpsx',
             executable='gps_node',
             name='emlid_6802', 
-            parameters=[{'comm_port': "/dev/ttyACM1"}, {'comm_speed': 9600}],
+            parameters=[{'comm_port': "/dev/emlid6802"}, {'comm_speed': 9600}],
             remappings= [('/gpsx', 'topic_emlid_6802')]
         ),
 
         Node(
             package='gpsx',
             executable='gps_node',
-            name='emlid_backpack', 
-            parameters=[{'comm_port': "/dev/ttyACM2"}, {'comm_speed': 9600}],
-            remappings= [('/gpsx', 'topic_emlid_backpack')]
+            name='emlid_C959', 
+            parameters=[{'comm_port': "/dev/emlidC959"}, {'comm_speed': 9600}],
+            remappings= [('/gpsx', 'topic_emlid_C959')]
         ),
         
         Node(
             package='gpsx',
             executable='gps_reader',
+        ),
+
+        Node(
+            package='gps_calcul_pos',
+            executable='gps_compute',
         )
     ])
