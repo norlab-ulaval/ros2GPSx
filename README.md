@@ -17,7 +17,7 @@ Additional parameters can be added for connection speed and connection port e.g.
 
 **Info for the warthog launch file**
 
-when launching the launch file expect:
+when launching, the launch file expect:
 
 E845 to be connected to com1
 
