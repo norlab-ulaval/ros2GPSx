@@ -19,5 +19,7 @@ Additional parameters can be added for connection speed and connection port e.g.
 
 when launching the launch file expect:
 E845 to be connected to com1
+
 6802 to be connected to com2
+
 C959 to be connected to com3
