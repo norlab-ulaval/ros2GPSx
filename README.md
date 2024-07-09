@@ -16,6 +16,7 @@ Additional parameters can be added for connection speed and connection port e.g.
 ```ros2 run gpsx gps_node --ros-args -p "comm_port:=/dev/ttyUSB1" -p "comm_speed:=9600"```
 
 **Info for the warthog launch file**
+
 when launching the launch file expect:
 E845 to be connected to com1
 6802 to be connected to com2
