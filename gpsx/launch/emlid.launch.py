@@ -3,6 +3,7 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
+
 def generate_launch_description():
     return LaunchDescription([
         Node(
@@ -32,9 +33,4 @@ def generate_launch_description():
             package='gpsx',
             executable='gps_reader',
         ),
-
-        Node(
-            package='gps_calcul_pos',
-            executable='gps_compute',
-        )
     ])
