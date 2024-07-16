@@ -4,7 +4,6 @@
 #include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/float32_multi_array.hpp"
 #include "gpsx/msg/gpsx.hpp"
-#include "gpsx/msg/xyz.hpp"
 #include <chrono>
 #include <iostream>
 //below lib for coord conversion

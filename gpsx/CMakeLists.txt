@@ -24,7 +24,6 @@ find_package(sensor_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Gpsx.msg"
-  "msg/Xyz.msg"
   "srv/GetSatList.srv"
 )
 
