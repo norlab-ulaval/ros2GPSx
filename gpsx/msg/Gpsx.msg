@@ -9,3 +9,4 @@ float32 true_course
 float32 true_course_magnetic
 float32 dilution
 uint32 utc_time
+uint64 unix_time

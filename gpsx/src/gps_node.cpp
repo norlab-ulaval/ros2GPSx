@@ -60,6 +60,7 @@ struct messageGGA
   double separation;
   int fix;
   int satellites;
+  unsigned long int unix_time;
 };
 
 /*
@@ -131,6 +132,7 @@ class GPSPublisher : public rclcpp::Node
     GPSPublisher(): Node("gps_publisher"), initialized_(false), newdata_(false), run_(false)
     {
       // initialize message structures
+      gga_.unix_time = 0;
       gga_.UTCtime=std::string();
       gga_.latitude=0.0;
       gga_.longitude=0.0;
@@ -668,6 +670,7 @@ int GPSPublisher::readMessage(void)
 void GPSPublisher::timer_callback()
 {
   auto message = gpsx::msg::Gpsx();
+  auto ros_unix_time = get_clock()->now().seconds();
   if(!initialized_)
   {
     // retry to establish connection in 1 second
@@ -681,6 +684,7 @@ void GPSPublisher::timer_callback()
 
   if(newdata_)
   {
+    message.unix_time = ros_unix_time;
     message.longitude=gga_.longitude;
     message.latitude=gga_.latitude;
     message.altitude=gga_.altitude;
