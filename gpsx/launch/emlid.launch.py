@@ -29,4 +29,13 @@ def generate_launch_description():
             remappings= [('/gpsx', 'topic_emlid_C959')]
         ),
         
+        Node(
+            package='norlab_gps_compute',
+            executable='coordinates_convert',
+        ),
+
+        Node(
+            package='norlab_gps_compute',
+            executable='pose_compute',
+        ),
     ])
