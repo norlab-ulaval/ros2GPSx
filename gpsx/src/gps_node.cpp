@@ -670,7 +670,7 @@ int GPSPublisher::readMessage(void)
 void GPSPublisher::timer_callback()
 {
   auto message = gpsx::msg::Gpsx();
-  auto ros_unix_time = get_clock()->now().seconds();
+  auto ros_unix_time = get_clock()->now().nanoseconds();
   if(!initialized_)
   {
     // retry to establish connection in 1 second
