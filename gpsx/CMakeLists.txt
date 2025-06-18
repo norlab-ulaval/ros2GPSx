@@ -31,9 +31,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 add_executable(gps_node src/gps_node.cpp)
 ament_target_dependencies(gps_node rclcpp std_msgs sensor_msgs)
 
-add_executable(gps_reader src/gps_reader.cpp)
-ament_target_dependencies(gps_reader rclcpp std_msgs sensor_msgs)
-
 rosidl_get_typesupport_target(cpp_typesupport_target
   ${PROJECT_NAME} rosidl_typesupport_cpp)
 
@@ -50,19 +47,6 @@ install(TARGETS
   INCLUDES
   DESTINATION include)
 
-target_link_libraries(gps_reader "${cpp_typesupport_target}")
-
-target_include_directories(gps_reader PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-
-install(TARGETS 
-  gps_reader
-  EXPORT export_${PROJECT_NAME}
-  DESTINATION lib/${PROJECT_NAME}
-  INCLUDES
-  DESTINATION include)
-  
 install(DIRECTORY launch
     DESTINATION share/${PROJECT_NAME})
 

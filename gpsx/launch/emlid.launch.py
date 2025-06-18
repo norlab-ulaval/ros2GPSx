@@ -32,6 +32,7 @@ def generate_launch_description():
         Node(
             package='norlab_gps_compute',
             executable='coordinates_convert',
+            name= 'coordinates_convert'
         ),
 
         Node(
